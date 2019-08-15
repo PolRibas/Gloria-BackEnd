@@ -7,15 +7,30 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 const User = require('../models/User');
+const Club = require('../models/Club');
 
 const {
   isLoggedIn,
   isNotLoggedIn,
-  validationLoggin
+  validationLoggin,
+  validationSignup
 } = require('../helpers/middlewares');
 
-router.get('/me', isLoggedIn(), (req, res, next) => {
-  res.json(req.session.currentUser);
+router.get('/me', isLoggedIn(), async (req, res, next) => {
+    const user = req.session.currentUser;
+    console.log(user)
+    const club = await User.findById(user._id).populate('team.club')
+    const userToSend = {
+        username: user.username,
+        firstName: user.firstName,
+        surname: user.surname,
+        email: user.email,
+        id: user._id,
+        parentOf: user.parentOf,
+        team: user.team,
+        club
+    }
+  res.json(userToSend);
 });
 
 router.post(
@@ -30,6 +45,7 @@ router.post(
         next(createError(404));
       } else if (bcrypt.compareSync(password, user.password)) {
         req.session.currentUser = user;
+        console.log(user)
         return res.status(200).json(user);
       } else {
         next(createError(401));
@@ -43,18 +59,19 @@ router.post(
 router.post(
   '/signup',
   isNotLoggedIn(),
-  validationLoggin(),
+  validationSignup(),
   async (req, res, next) => {
-    const { username, password } = req.body;
+    const { username, email, password } = req.body;
 
     try {
+      const emailfind = await User.findOne({ email }, 'email');
       const user = await User.findOne({ username }, 'username');
-      if (user) {
+      if (user || emailfind) {
         return next(createError(422));
       } else {
         const salt = bcrypt.genSaltSync(10);
         const hashPass = bcrypt.hashSync(password, salt);
-        const newUser = await User.create({ username, password: hashPass });
+        const newUser = await User.create({ username, password: hashPass, email });
         req.session.currentUser = newUser;
         res.status(200).json(newUser);
       }

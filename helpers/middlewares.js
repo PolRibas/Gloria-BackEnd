@@ -27,3 +27,16 @@ exports.validationLoggin = () => (req, res, next) => {
     next();
   }
 };
+
+exports.validationSignup = () => (req, res, next) => {
+    console.log(req.body)
+    const { email, username, password } = req.body;
+  
+    if (!username || !password || !email) {
+      next(createError(422));
+    } else {
+      next();
+    }
+  };
+  
+
