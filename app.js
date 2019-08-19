@@ -13,6 +13,7 @@ require('dotenv').config();
 
 const auth = require('./routes/auth');
 const profile = require('./routes/profile');
+const club = require('./routes/club');
 
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -24,7 +25,7 @@ mongoose
     console.log(`Connected to database`);
   })
   .catch(error => {
-    console.error(error);
+    console.error(error, "theres AN ERROR");
   });
 
 const app = express();
@@ -59,6 +60,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', auth);
 app.use('/profile', profile);
+app.use('/club', club);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

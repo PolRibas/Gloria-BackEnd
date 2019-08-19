@@ -9,17 +9,15 @@ const eventSchema = new Schema({
       required: true,
       unique: true
 },
+  city: String,
+  sport: String,
   administrators: [{
     type: ObjectId,
     ref: 'User'
   }],
   teams: [{
-      name: String,
-      treiners: [{
         type: ObjectId,
-        ref: 'User'
-      }],
-      emails: Array
+        ref: 'Team'
   }]
 }, {
   timestamps: {

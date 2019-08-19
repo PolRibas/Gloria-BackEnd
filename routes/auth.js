@@ -18,7 +18,6 @@ const {
 
 router.get('/me', isLoggedIn(), async (req, res, next) => {
     const user = req.session.currentUser;
-    console.log(user)
     const club = await User.findById(user._id).populate('team.club')
     const userToSend = {
         username: user.username,
@@ -45,7 +44,6 @@ router.post(
         next(createError(404));
       } else if (bcrypt.compareSync(password, user.password)) {
         req.session.currentUser = user;
-        console.log(user)
         return res.status(200).json(user);
       } else {
         next(createError(401));
@@ -58,7 +56,6 @@ router.post(
 
 router.post(
   '/signup',
-  isNotLoggedIn(),
   validationSignup(),
   async (req, res, next) => {
     const { username, email, password } = req.body;

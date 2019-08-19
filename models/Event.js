@@ -5,16 +5,14 @@
     
     const eventSchema = new Schema({
       team: { 
-        name: String,
-        club: [{
         type: ObjectId,
-        ref: 'Club'
-      }]},
+        ref: 'Club'},
       type: {
         type: String,
         enum: ['match', 'training', 'fisical training', 'event', 'reunion'],
         require: true
       },
+      done: Boolean,
       attendees: [{
         type: ObjectId,
         ref: 'User'

@@ -26,6 +26,7 @@ const userSchema = new Schema({
     type: ObjectId,
     ref: 'User'
   }],
+  image: String,
   team: { 
     name: String,
     credential: {
