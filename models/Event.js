@@ -33,11 +33,10 @@
           }]
       }],
       personalData: { 
-        data: [{
-            name: String,
-            param: String,
-            number: Number
-        }]}
+        data: [Object]
+    },
+    rival: String,
+    title: String,
     }, {
       timestamps: {
         createdAt: 'created_at',

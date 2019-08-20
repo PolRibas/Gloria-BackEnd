@@ -176,8 +176,10 @@ router.post('/createClub', async (req, res, next) => {
 
   router.put('/createEvent', async (req, res, next) =>  {
     try{
-        const {teamId, type, date} = req.body;
-        const newEvent = await Event.create({team: teamId, type, date, done: false})
+        const {teamId, type, date, title, rival} = req.body;
+        console.log(req.body)
+        const newEvent = await Event.create({team: teamId, type, date, title, rival, done: false})
+        console.log(newEvent)
         await Team.findByIdAndUpdate({_id: teamId}, {$push: {events: newEvent._id}})
         return res.status(200).json(newEvent);
     }catch (err){
@@ -191,73 +193,60 @@ router.post('/createClub', async (req, res, next) => {
         const allTeams = await Team.find().populate("events");
         const teamEvents = allTeams.filter(team=> team.players.includes(id) || team.treiners.includes(id) && team);
        return res.status(200).json(teamEvents)
-    }
+    } 
     catch (err){
         next(err)
     }
   })
 
-//   router.get('/loadEvents', async (req, res, next) =>  {
-//     try{
-//         const id = req.session.currentUser._id
-//         const myEvents = [];
-//         const allTeams = await Team.find();
-        
-//         let getEvents = eventArray => { eventArray.map(async (eventId) => {
-//                 let event = await Event.findById(eventId)
-//                  myEvents.push(event);
-//                 console.log("HERE",myEvents)
-               
-//             })}
+  router.get('/getEvent/:id', async (req, res, next) =>  {
+    try{
+        const id = req.params.id
+        console.log(id)
+        const event = await Event.findById(id).populate('team')
+       return res.status(200).json(event)
+    } 
+    catch (err){
+        next(err)
+    }
+  })
 
-//             const teamPromises = await allTeams.filter((async (team) => {
-//                 return team.players.includes(id) || team.treiners.includes(id) && Promise.all([getEvents(team.events)])
-//                     .then(data => data)}))
-                    
-//                     Promise.all(teamPromises)
-//                         .then(data => {
-//                             console.log(data)
-//                             console.log("MyEvents", myEvents);
-                            
-//                         })
-//                         .catch(error =>console.log(error))
-//     }
+  router.delete('/deleteEvent/:id', async (req, res, next) =>  {
+    try{
+        const id = req.params.id
+        console.log(id)
+        await Event.findByIdAndDelete(id)
+       return res.status(200).json(id)
+    } 
+    catch (err){
+        next(err)
+    }
+  })
 
-        
-       
-//     //    return res.status(200).json(myEvents)
-//     catch (err){
-//         next(err)
-//     }
-//   })
+  router.put('/updateEvent', async (req, res, next) =>  {
+    try{
+        const data = req.body
+        const {physicalDrain, rivalGoals, myGoals, type, id} = data
+        console.log({physicalDrain, rivalGoals, myGoals, type, id})
+        if(type === 'match'){
+            await Event.findByIdAndUpdate(id, {physicalDrain, done: true, 
+            $push: { 'personalData.data': [{name: 'myGoals', param: myGoals }, {name: 'rivalGoals', param: rivalGoals }]} })
+        }else{
+            await Event.findByIdAndUpdate(id, {physicalDrain, done: true})
+        }
+        return res.status(200).json('All ok')
+    } 
+    catch (err){
+        next(err)
+    }
+  })
+
+
+//   updateEvent(data){
+//     return this.clubService.put(`/club/updateEvent/`, data)
+//   }
+
 
 
   
   module.exports = router;
-
-
-
-
-
-
-        // await allTeams.forEach(async (team) => {
-            //     await team.players.forEach( async (player) => {
-            //         if(player.equals(id)){
-            //             team.events.forEach( async (event) => {
-            //                 const OneEvent = await Event.findById(event);
-            //                 myEvents.push(OneEvent)
-            //             }) 
-            //         }
-            //     })
-            //     if(!player){
-            //     await team.treiners.forEach( async (treiner) => {
-            //         if(treiner.equals(id)){
-            //             team.events.forEach( async (event) => {
-            //                 const OneEvent = await Event.findById(event);
-            //                 myEvents.push(OneEvent)
-            //                 console.log(myEvents)
-            //             }) 
-            //         }
-            //     })}
-            //     player = false;
-            // })
