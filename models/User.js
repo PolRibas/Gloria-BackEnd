@@ -26,7 +26,10 @@ const userSchema = new Schema({
     type: ObjectId,
     ref: 'User'
   }],
-  image: String,
+  image: {
+      type: String,
+      default: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo7k8ejWKeaxHx1BzanG1IvWaYVxY_zc1D2nxvEenUGhxHicHgtQ'
+  }  ,
   team: { 
     name: String,
     credential: {

@@ -226,13 +226,12 @@ router.post('/createClub', async (req, res, next) => {
   router.put('/updateEvent', async (req, res, next) =>  {
     try{
         const data = req.body
-        const {physicalDrain, rivalGoals, myGoals, type, id} = data
-        console.log({physicalDrain, rivalGoals, myGoals, type, id})
+        const {physicalDrain, rivalGoals, myGoals, type, id, url} = data
         if(type === 'match'){
-            await Event.findByIdAndUpdate(id, {physicalDrain, done: true, 
+            await Event.findByIdAndUpdate(id, {physicalDrain, image: url, done: true, 
             $push: { 'personalData.data': [{name: 'myGoals', param: myGoals }, {name: 'rivalGoals', param: rivalGoals }]} })
         }else{
-            await Event.findByIdAndUpdate(id, {physicalDrain, done: true})
+            await Event.findByIdAndUpdate(id, {physicalDrain, image: url, done: true})
         }
         return res.status(200).json('All ok')
     } 

@@ -11,6 +11,7 @@ const eventSchema = new Schema({
 },
   city: String,
   sport: String,
+  image: String,
   administrators: [{
     type: ObjectId,
     ref: 'User'

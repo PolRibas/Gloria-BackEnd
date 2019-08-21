@@ -20,6 +20,7 @@
       date: {
           type: Date,
       },
+      image: String,
       physicalDrain: Number,
       personalData: [{
           user: {

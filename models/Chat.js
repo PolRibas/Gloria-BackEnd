@@ -8,6 +8,7 @@ const chatShema = new Schema({
     type: String,
     unique: true
   },
+  idChat: String,
   chat: {
     type: Array
   }
@@ -15,4 +16,4 @@ const chatShema = new Schema({
 
 const Chat = mongoose.model('Chat', chatShema);
 
-module.exports = Application;
+module.exports = Chat;

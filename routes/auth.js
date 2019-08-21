@@ -27,7 +27,8 @@ router.get('/me', isLoggedIn(), async (req, res, next) => {
         id: user._id,
         parentOf: user.parentOf,
         team: user.team,
-        club
+        club,
+        image: club.image
     }
   res.json(userToSend);
 });

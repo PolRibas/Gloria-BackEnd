@@ -21,9 +21,9 @@ router.put(
     async (req, res, next) => {
         const current = req.session.currentUser;
     
-      const { _id, username, email, firstName, surname } = req.body;
+      const { _id, username, email, firstName, surname, url } = req.body;
       try {
-          const newUser = await User.findByIdAndUpdate(_id, {username, email, firstName, surname}, {new: true})
+          const newUser = await User.findByIdAndUpdate(_id, {username, email, firstName, surname, image: url}, {new: true})
           req.session.currentUser = newUser
           return res.status(200).json(newUser);
       } catch (error) {
