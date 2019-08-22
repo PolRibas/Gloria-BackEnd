@@ -180,7 +180,7 @@ router.post('/createClub', async (req, res, next) => {
         console.log(req.body)
         const newEvent = await Event.create({team: teamId, type, date, title, rival, done: false})
         console.log(newEvent)
-        await Team.findByIdAndUpdate({_id: teamId}, {$push: {events: newEvent._id}})
+        await Team.findByIdAndUpdate({_id: teamId}, {$push: {events: newEvent._id}}, {new: true})
         return res.status(200).json(newEvent);
     }catch (err){
         next(err)
@@ -229,7 +229,7 @@ router.post('/createClub', async (req, res, next) => {
         const {physicalDrain, rivalGoals, myGoals, type, id, url} = data
         if(type === 'match'){
             await Event.findByIdAndUpdate(id, {physicalDrain, image: url, done: true, 
-            $push: { 'personalData.data': [{name: 'myGoals', param: myGoals }, {name: 'rivalGoals', param: rivalGoals }]} })
+            $push: { 'personalData.data': [{name: 'myGoals', param: myGoals }, {name: 'rivalGoals', param: rivalGoals }]} },{new: true})
         }else{
             await Event.findByIdAndUpdate(id, {physicalDrain, image: url, done: true})
         }
